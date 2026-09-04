@@ -65,7 +65,7 @@ I will quickly scan the repository to see the surrounding code for `app/review_s
 - В API добавить Pydantic‑модели запроса/ответа, валидацию, обработку ошибок, возможную асинхронность и/или фоновые задачи, а также документацию по семантике ресурса.
 - В сервисе LLM ограничить размер diff, добавить системные инструкции и безопасную вставку контента (разделители, экранирование), запросить структурированный вывод, добавить таймауты/ретраи.
 - По возможности разделить доменную логику и слой представления, и добавить базовое логирование. |  |  |  |
-| P1-02 | Повторное ревью с master prompt |  | master prompt |  |  |  |  |  |
+| P1-02 | Повторное ревью с master prompt | GPT-5 | master prompt | См. Master Prompt v1 ниже | Summary: добавлен POST `/api/reviews` без валидации входа; сервис `ReviewService.review` формирует промпт с полным diff и возвращает `{"comment": answer}`. Риски: 1) SEC-1 — нет редактирования секретов перед LLM; 2) API-1 — нет ограничения длины diff/413; 3) OUT-1 — формат ответа не соответствует контракту. Checks: тест 413 при длинном diff; тест редактирования секретов; тест структуры ответа. | Приняли риски с evidence, привязанные к строкам диффа и правилам | Отклонили предположения вне diff (аутентификация, rate limiting) | Проверили против TRAINING_PR.diff и правил из CASE.md |
 | P1-03 |  |  |  |  |  |  |  |  |
 
 ## Master Prompt v1
@@ -74,43 +74,43 @@ I will quickly scan the repository to see the surrounding code for `app/review_s
 
 ### 1. Цель и роль
 
-- Цель:
-- Роль AI:
+- Цель: провести ревью учебного PR по diff и вернуть summary, ≤3 риска с доказательствами и список проверок.
+- Роль AI: AI‑reviewer, который опирается только на diff и правила (SEC‑1…QA‑1), не выполняет действий в репозитории.
 
 ### 2. Входы и источники
 
-- Обязательный вход:
-- Разрешённые файлы и источники:
-- Context Pack — факты, правила, примеры и ограничения:
+- Обязательный вход: practices/practice_01/TRAINING_PR.diff.
+- Разрешённые файлы и источники: только diff и CASE.md для правил.
+- Context Pack — факты, правила, примеры и ограничения: см. practices/practice_01/context.md (SEC‑1, API‑1, OUT‑1, QA‑1, SCOPE‑1).
 
 ### 3. Задача и артефакты
 
-- Что сделать:
-- Что вернуть:
+- Что сделать: прочитать diff, выявить подтверждённые риски, сформировать проверяемые evidence и предложить проверки.
+- Что вернуть: JSON с `summary`, `risks` (≤3), `checks`.
 
 ### 4. Формат результата
 
-- Структура ответа:
-- Ограничения объёма:
+- Структура ответа: { summary: string, risks: [{ file, line, evidence, risk }], checks: string[] }.
+- Ограничения объёма: не более 3 рисков; без лишних рассуждений.
 
 ### 5. Полномочия и запреты
 
-- Разрешено:
-- Запрещено:
+- Разрешено: анализировать diff, ссылаться на правила.
+- Запрещено: approve, merge, редактировать код; придумывать правила.
 
 ### 6. Рабочий процесс и остановка
 
-- Шаги:
-- Когда остановиться и запросить человека:
+- Шаги: 1) Прочитать diff; 2) Сопоставить с правилами; 3) Сформировать summary; 4) Отобрать ≤3 риска с evidence; 5) Составить checks. 6) Вернуть JSON.
+- Когда остановиться и запросить человека: если риск не подтверждён diff или правилом — не включать его (QA‑1) и завершить.
 
 ### 7. Проверки и evidence
 
-- Как проверять утверждения:
-- Какое evidence сохранить:
+- Как проверять утверждения: все риски подтверждать строками из diff или ссылкой на правило.
+- Какое evidence сохранить: точные цитаты из diff (строки/фрагменты) и указание файла и строк по TRAINING_PR.diff.
 
 ### 8. Definition of Done
 
-- Задача закончена, когда:
+- Задача закончена, когда: возвращены summary, ≤3 риска с file:line и evidence, и список checks; каждый риск подтверждён diff или правилом; нет запрещённых действий.
 
 ## Сравнение двух запусков
 
@@ -128,3 +128,45 @@ I will quickly scan the repository to see the surrounding code for `app/review_s
 | 1 |  |  |
 | 2 |  |  |
 | 3 |  |  |
+Артефакты: practices/practice_01/TRAINING_PR.diff, practices/practice_01/CASE.md, practices/practice_01/context.md
+
+Возврат строго в формате JSON.
+
+## AI-reviewer Output v1
+
+```json
+{
+  "summary": "Добавлен POST /api/reviews, который вызывает ReviewService.review. ReviewService формирует промпт с полным diff и возвращает {\"comment\": answer}. В коде нет редактирования секретов, нет ограничения длины diff/ответа 413, и формат ответа не соответствует OUT-1.",
+  "risks": [
+    {
+      "file": "app/review_service.py",
+      "line": "19-22",
+      "candidate": "SEC-1: diff отправляется во внешний LLM без удаления секретов",
+      "evidence": "prompt = f\"Review this pull request and find problems:\n{diff}\"\nanswer = self.llm.generate(prompt)",
+      "rule": "SEC-1",
+      "check": "Юнит-тест: передать в review diff со строкой 'token=abc123'; LLM замокать и зафиксировать prompt; убедиться, что вместо значения секрета в prompt '[REDACTED]'"
+    },
+    {
+      "file": "app/api.py",
+      "line": "35-38",
+      "candidate": "API-1: нет ограничения длины diff и отказа 413",
+      "evidence": "@app.post(\"/api/reviews\")\ndef create_review(payload: dict) -> dict[str, str]:\n    return review_service.review(payload[\"diff\"])",
+      "rule": "API-1",
+      "check": "Интеграционный тест: POST /api/reviews с diff длиной > 20000 символов должен вернуть 413"
+    },
+    {
+      "file": "app/review_service.py",
+      "line": "21-22",
+      "candidate": "OUT-1: формат ответа не соответствует требуемой структуре (summary/risks/checks)",
+      "evidence": "return {\"comment\": answer}",
+      "rule": "OUT-1",
+      "check": "Интеграционный тест: POST /api/reviews возвращает JSON со свойствами summary, risks (≤3) и checks"
+    }
+  ],
+  "checks": [
+    "POST /api/reviews с diff > 20000 символов -> 413",
+    "Юнит-тест ReviewService: редактирование секретов в prompt по SEC-1",
+    "Контракт ответа по OUT-1: summary/risks/checks"
+  ]
+}
+```
