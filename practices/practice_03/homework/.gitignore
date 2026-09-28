@@ -1,0 +1,6 @@
+# ignore only temporary debug/runtime artifacts, keep experiment outputs
+tmp-run-*
+*.tmp
+*.log
+*.cache
+*.DS_Store
