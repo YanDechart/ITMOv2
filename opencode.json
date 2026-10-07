@@ -25,6 +25,11 @@
       "context7": {
         "type": "remote",
         "url": "https://mcp.context7.com/mcp"
+      },
+      "practice4-password": {
+        "type": "local",
+        "command": ["python3", "practices/practice_04/mcp_server.py"],
+        "cwd": "."
       }
     }
   }
