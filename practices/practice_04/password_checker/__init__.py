@@ -55,3 +55,28 @@ def check_policy(password: str) -> List[str]:
         violations.append("special")
 
     return violations
+
+
+def suggest_improvements(password: str) -> List[str]:
+    """Return human-readable suggestions based on Feature A policy violations.
+
+    Suggestions correspond to violations returned by check_policy:
+    - "min_length" -> "Use at least 12 characters."
+    - "uppercase" -> "Include at least one uppercase letter."
+    - "digit" -> "Include at least one digit."
+    - "special" -> "Include at least one special character."
+
+    If the password satisfies all requirements, return an empty list.
+    Preserves TypeError behavior for invalid inputs.
+    """
+    # Delegate input validation to check_policy to preserve TypeError behavior/message
+    violations = check_policy(password)
+
+    suggestion_map = {
+        "min_length": "Use at least 12 characters.",
+        "uppercase": "Include at least one uppercase letter.",
+        "digit": "Include at least one digit.",
+        "special": "Include at least one special character.",
+    }
+
+    return [suggestion_map[v] for v in violations if v in suggestion_map]
