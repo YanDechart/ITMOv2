@@ -1,0 +1,8 @@
+{
+  "name": "check-after-edit",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@opencode/plugin": "^2.0.0"
+  }
+}

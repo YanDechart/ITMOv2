@@ -173,3 +173,5 @@ student_solutions/
 !.roo/
 !.specify/
 !.vscode/
+
+.opencode/plugins/check-after-edit/node_modules/
