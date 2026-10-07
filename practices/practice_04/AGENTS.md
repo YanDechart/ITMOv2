@@ -25,14 +25,9 @@ A small Python project to check passwords. Keep changes minimal and focused.
 - Any files outside `practices/practice_04/`.
 - Do not commit changes unless explicitly asked.
 
-## Future Work (Do Not Implement Now)
-- Feature A: Add password-policy validation with all of the following:
-  - Minimum 12 characters
-  - At least one uppercase letter
-  - At least one digit
-  - At least one special character
-  - Report which requirements are violated
-- Feature B: Add human-readable improvement suggestions based on the violations reported by Feature A.
+## Implemented Features
+- Feature A (Policy validation): check_policy(password: str) returns violation keys among: min_length, uppercase, digit, special.
+- Feature B (Suggestions): suggest_improvements(password: str) maps violations to human-readable messages.
 
-## Out of Scope (Do Not Create Now)
-- Skills, MCP configuration, hooks, runners, worktrees, reflection.md
+## Notes
+- The project includes a custom MCP server (practice4-password), a check-after-edit verification hook, and a TDD skill. These are part of the configured environment and should be used as-is; do not alter them unless a task explicitly requires it.
