@@ -15,7 +15,7 @@ I will open the diff file to review its contents and identify issues.
 I will quickly scan the repository to see the surrounding code for `app/review_service.py`, `app/api.py`, and `app/dependencies` to provide a precise review with context.
 
 ✱ Glob "app/**/*.py" 0 matches
-
+ 
 Ниже — замечания по диффу, отсортированы по серьёзности, с привязкой к файлам и строкам из TRAINING_PR.diff.
 
 Критичные
