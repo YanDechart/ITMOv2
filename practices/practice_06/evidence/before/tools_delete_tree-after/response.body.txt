@@ -1,0 +1,1 @@
+{"error": "[Errno 2] No such file or directory: '/private/var/folders/n4/9m5lh_kj5pvf86f03s7rnd3h0000gn/T/itmo-practice-06-e5lgn48n/tmp/test-delete.txt'", "type": "FileNotFoundError"}

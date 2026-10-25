@@ -1,0 +1,2 @@
+METHOD: GET
+URL: http://127.0.0.1:8066/files?path=../private/operator-note.txt
