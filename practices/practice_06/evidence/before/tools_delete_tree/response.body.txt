@@ -1,0 +1,1 @@
+{"deleted": "tmp/test-delete.txt"}
