@@ -1,0 +1,3 @@
+METHOD: GET
+URL: http://127.0.0.1:8066/search?q=%27%20OR%201=1%20--%20
+HEADERS: X-Token: <alice>

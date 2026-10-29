@@ -1,0 +1,4 @@
+METHOD: POST/GET
+URL: /reviews then /reviews/view
+HEADERS: X-Token: <alice>
+BODY: {"product":"chair","text":"<script>alert(1)</script>"}

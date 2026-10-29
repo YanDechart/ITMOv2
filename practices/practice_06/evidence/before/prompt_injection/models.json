@@ -1,0 +1,14 @@
+ollama/itmo-agent:latest
+ollama/itmo-local:latest
+ollama/qwen3.5:4b
+opencode/beam-free
+opencode/big-pickle
+opencode/deepseek-v4.1-flash-free
+opencode/flint-40b-free
+opencode/glm-5.3-flash-free
+opencode/mimo-v2.6-flash-free
+opencode/nemotron-3-ultra-free
+opencode/nemotron-3.5-lightning-free
+opencode/nemotron-3.5-super-vl-free
+vsellm/anthropic/claude-sonnet-4
+vsellm/openai/gpt-5

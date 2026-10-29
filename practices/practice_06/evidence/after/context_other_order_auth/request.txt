@@ -1,0 +1,3 @@
+METHOD: GET
+URL: http://127.0.0.1:8066/assistant/context?order_id=2
+HEADERS: X-Token: <alice>
