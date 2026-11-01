@@ -1,0 +1,152 @@
+{
+  "student": {
+    "name": "Алексей Смирнов",
+    "group": "P3212"
+  },
+  "days": [
+    {
+      "dayId": 1,
+      "label": "Пн",
+      "lessons": [
+        {
+          "subject": "Машинное обучение",
+          "startTime": "13:30",
+          "endTime": "15:00",
+          "room": "Ауд. 430",
+          "teacher": "Соколова Елена Игоревна"
+        },
+        {
+          "subject": "Алгоритмы и структуры данных",
+          "startTime": "08:20",
+          "endTime": "09:50",
+          "room": "Ауд. 2337",
+          "teacher": "Кузнецов Андрей Павлович"
+        },
+        {
+          "subject": "Веб-программирование",
+          "startTime": "10:00",
+          "endTime": "11:30",
+          "room": "Кронверкский, 49",
+          "teacher": "Орлова Мария Сергеевна"
+        },
+        {
+          "subject": "Базы данных",
+          "startTime": "10:00",
+          "endTime": "11:20",
+          "room": "Ауд. 1216",
+          "teacher": "Волков Илья Олегович"
+        }
+      ],
+      "isEmpty": false
+    },
+    {
+      "dayId": 2,
+      "label": "Вт",
+      "lessons": [
+        {
+          "subject": "Теория вероятностей",
+          "startTime": "09:50",
+          "endTime": "11:20",
+          "room": "Ауд. 1404",
+          "teacher": "Морозова Анна Викторовна"
+        },
+        {
+          "subject": "Английский язык",
+          "startTime": "11:40",
+          "endTime": "13:10",
+          "room": "Ауд. 2201",
+          "teacher": "Смирнова Ольга Андреевна"
+        }
+      ],
+      "isEmpty": false
+    },
+    {
+      "dayId": 3,
+      "label": "Ср",
+      "lessons": [
+        {
+          "subject": "Проектирование информационных систем",
+          "startTime": "10:00",
+          "endTime": "11:30",
+          "teacher": "Фёдоров Максим Ильич"
+        },
+        {
+          "subject": "Компьютерные сети",
+          "startTime": "12:00",
+          "endTime": "13:30",
+          "room": "Ауд. 2426",
+          "teacher": "Белов Роман Денисович"
+        }
+      ],
+      "isEmpty": false
+    },
+    {
+      "dayId": 4,
+      "label": "Чт",
+      "lessons": [
+        {
+          "subject": "Физическая культура",
+          "startTime": "10:00",
+          "endTime": "11:30",
+          "room": "Спортивный зал",
+          "teacher": "Лебедев Артём Николаевич"
+        }
+      ],
+      "isEmpty": false
+    },
+    {
+      "dayId": 5,
+      "label": "Пт",
+      "lessons": [
+        {
+          "subject": "Основы программной инженерии",
+          "startTime": "11:40",
+          "endTime": "13:10",
+          "room": "Ауд. 3217"
+        },
+        {
+          "subject": "Командный проект",
+          "startTime": "13:30",
+          "endTime": "15:00",
+          "room": "Коворкинг 3",
+          "teacher": "Никитин Павел Олегович"
+        }
+      ],
+      "isEmpty": false
+    },
+    {
+      "dayId": 6,
+      "label": "Сб",
+      "lessons": [
+        {
+          "subject": "Факультатив по Python",
+          "startTime": "12:00",
+          "endTime": "13:30",
+          "room": "Онлайн",
+          "teacher": "Захарова Ирина Павловна"
+        },
+        {
+          "subject": "Факультатив по Python",
+          "startTime": "12:00",
+          "endTime": "13:30",
+          "room": "Онлайн",
+          "teacher": "Захарова Ирина Павловна"
+        },
+        {
+          "subject": "Карьерный трек",
+          "startTime": "12:40",
+          "endTime": "14:10",
+          "room": "Актовый зал",
+          "teacher": "Попов Денис Сергеевич"
+        }
+      ],
+      "isEmpty": false
+    },
+    {
+      "dayId": 7,
+      "label": "Вс",
+      "lessons": [],
+      "isEmpty": true
+    }
+  ]
+}
