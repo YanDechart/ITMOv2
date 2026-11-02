@@ -1,0 +1,4 @@
+METHOD: POST
+URL: http://127.0.0.1:8066/orders
+HEADERS: X-Token: <alice>, Content-Type: application/json
+BODY: {"product":"lamp","price":1}

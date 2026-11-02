@@ -1,0 +1,3 @@
+METHOD: POST
+URL: http://127.0.0.1:8066/assistant/execute
+BODY: {"decision":{"tool":"read_file","arguments":{"path":"tmp/test-delete.txt"}}}

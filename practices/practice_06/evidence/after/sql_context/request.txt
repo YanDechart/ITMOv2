@@ -1,0 +1,3 @@
+METHOD: GET
+URL: /assistant/context inj
+HEADERS: X-Token: <alice>
