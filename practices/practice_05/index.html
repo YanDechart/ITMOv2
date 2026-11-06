@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Mini My ITMO — учебное расписание студента на текущую неделю"
+    />
+    <title>Mini My ITMO · Расписание</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./" aria-label="Mini My ITMO — главная">
+          <span class="brand-mark" aria-hidden="true">M</span>
+          <span>
+            <strong>Mini My ITMO</strong>
+            <small>Личный кабинет</small>
+          </span>
+        </a>
+        <span class="week-badge">
+          <span class="status-dot" aria-hidden="true"></span>
+          Учебная неделя
+        </span>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <h1 class="visually-hidden">Расписание студента Mini My ITMO</h1>
+
+      <section class="student-card" aria-labelledby="student-name">
+        <div id="student-initial" class="student-avatar" aria-hidden="true">И</div>
+        <div class="student-copy">
+          <span class="eyebrow">Студент</span>
+          <h2 id="student-name">Загрузка профиля…</h2>
+          <p id="student-group">Группа —</p>
+        </div>
+        <div class="student-decoration" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+      </section>
+
+      <nav class="day-navigation" aria-label="Выбор дня недели">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Текущая неделя</span>
+            <h2>Выберите день</h2>
+          </div>
+          <span class="timezone-note">Московское время</span>
+        </div>
+        <div id="day-selector" class="day-selector"></div>
+      </nav>
+
+      <section class="schedule-section" aria-labelledby="schedule-title">
+        <div class="section-heading schedule-heading">
+          <div>
+            <span class="eyebrow">Мои занятия</span>
+            <h2 id="schedule-title">Расписание</h2>
+          </div>
+        </div>
+        <div id="schedule-state" class="schedule-state" aria-live="polite" aria-busy="true">
+          <section class="schedule-panel loading-state">
+            <span class="spinner" aria-hidden="true"></span>
+            <div class="state-copy">
+              <h3 class="state-title">Загружаем расписание</h3>
+              <p class="state-description">Это займёт всего несколько секунд.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Учебный проект · Практика 5 · Specification-Driven Development</p>
+    </footer>
+
+    <noscript>
+      <p class="noscript">Для просмотра расписания включите JavaScript.</p>
+    </noscript>
+    <script type="module" src="./js/app.mjs"></script>
+  </body>
+</html>
