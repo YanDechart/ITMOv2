@@ -1,0 +1,880 @@
+{
+  "name": "Практика 7.2 — Weekly Issue Statistics",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * MON"
+            }
+          ]
+        }
+      },
+      "id": "b361bdde-631c-42b5-b570-1ec98adee3b1",
+      "name": "Every Monday 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function mondayUTC(date) {\n  const d = new Date(Date.UTC(\n    date.getUTCFullYear(),\n    date.getUTCMonth(),\n    date.getUTCDate()\n  ));\n  const day = d.getUTCDay() || 7;\n  d.setUTCDate(d.getUTCDate() - day + 1);\n  return d;\n}\n\nconst now = new Date();\nconst currentMonday = mondayUTC(now);\nconst end = new Date(currentMonday);\n\nif (now.getUTCDay() !== 1) {\n  end.setUTCDate(end.getUTCDate() + 7);\n}\n\nconst start = new Date(end);\nstart.setUTCDate(start.getUTCDate() - 7);\n\nconst previous = new Date(start);\nprevious.setUTCDate(previous.getUTCDate() - 7);\n\nconst dateOnly = d => d.toISOString().slice(0, 10);\n\nreturn [{\n  json: {\n    repo: 'YanDechart/ITMOv2',\n    week_start: start.toISOString(),\n    week_end: end.toISOString(),\n    prev_week_start: previous.toISOString(),\n    start_date: dateOnly(start),\n    end_date: dateOnly(end)\n  }\n}];"
+      },
+      "id": "98f1c989-f55b-4067-ba86-4bb51190bd5a",
+      "name": "Week Window",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/search/issues?q={{ encodeURIComponent('repo:YanDechart/ITMOv2 is:issue created:' + $json.start_date + '..' + $json.end_date + ' label:bug') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9197172f-4c3b-4a48-9c00-04bc510be16c",
+      "name": "Weekly Bugs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "B4mN67cIcHBpmxr1",
+          "name": "GitHub account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/search/issues?q={{ encodeURIComponent('repo:YanDechart/ITMOv2 is:issue created:' + $('Week Window').first().json.start_date + '..' + $('Week Window').first().json.end_date + ' label:task') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fa8dcbbf-a937-41fc-8eae-ff24994af467",
+      "name": "Weekly Tasks",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "B4mN67cIcHBpmxr1",
+          "name": "GitHub account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/search/issues?q={{ encodeURIComponent('repo:YanDechart/ITMOv2 is:issue created:' + $('Week Window').first().json.start_date + '..' + $('Week Window').first().json.end_date + ' label:feature') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b9a8a4fa-63a1-4d66-a77b-6e079f2c8b89",
+      "name": "Weekly Features",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        0
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "B4mN67cIcHBpmxr1",
+          "name": "GitHub account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/search/issues?q={{ encodeURIComponent('repo:YanDechart/ITMOv2 is:issue created:' + $('Week Window').first().json.start_date + '..' + $('Week Window').first().json.end_date + ' label:needs-triage') }}&per_page=100",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "29c1e97f-5542-461f-aa13-32ab6ea0d437",
+      "name": "Weekly Needs Triage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        0
+      ],
+      "credentials": {
+        "githubApi": {
+          "id": "B4mN67cIcHBpmxr1",
+          "name": "GitHub account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const window = $('Week Window').first().json;\nconst sources = [\n  ['bug', $('Weekly Bugs').first().json.items ?? []],\n  ['task', $('Weekly Tasks').first().json.items ?? []],\n  ['feature', $('Weekly Features').first().json.items ?? []],\n  ['needs_triage', $('Weekly Needs Triage').first().json.items ?? []],\n];\nconst byType = { bug: 0, task: 0, feature: 0, needs_triage: 0 };\nconst byAuthor = {};\nconst issues = [];\nfor (const [type, rows] of sources) {\n  byType[type] = rows.length;\n  for (const issue of rows) {\n    const author = issue.user?.login ?? 'unknown';\n    byAuthor[author] = (byAuthor[author] ?? 0) + 1;\n    issues.push({ number: issue.number, title: issue.title, author, type, url: issue.html_url });\n  }\n}\nconst total = Object.values(byType).reduce((sum, value) => sum + value, 0);\nreturn [{ json: { ...window, total, by_type: byType, by_author: byAuthor, issues } }];"
+      },
+      "id": "c7860cbc-14ea-4173-ab4e-8db3093e2eca",
+      "name": "Group by Type and Author",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "issue_weekly_stats",
+          "mode": "name"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "week_start",
+              "keyValue": "={{ $json.prev_week_start }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "38099315-3df8-4aae-9424-6e96004205e6",
+      "name": "Load Previous Week",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1680,
+        0
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const current = $('Group by Type and Author').first().json;\nconst prev = $json.week_start ? $json : {};\nconst previous = {\n  total: Number(prev.total) || 0,\n  bug: Number(prev.bug) || 0,\n  task: Number(prev.task) || 0,\n  feature: Number(prev.feature) || 0,\n  needs_triage: Number(prev.needs_triage) || 0\n};\nconst delta = {\n  total: current.total - previous.total,\n  bug: current.by_type.bug - previous.bug,\n  task: current.by_type.task - previous.task,\n  feature: current.by_type.feature - previous.feature,\n  needs_triage: current.by_type.needs_triage - previous.needs_triage\n};\nreturn [{ json: { ...current, previous_exists: Boolean(prev.week_start), previous, delta } }];"
+      },
+      "id": "a5582064-895f-4850-81d1-337c97797fe8",
+      "name": "Calculate Weekly Delta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Подготовь короткий AI-комментарий недели на русском языке для отчёта по GitHub Issues. Не перечисляй таблицу дословно: выдели 2–3 заметных изменения, возможные риски и одно практическое действие. Не выдумывай причин, которых нет в данных.\n\nТекущая статистика:\n{{ JSON.stringify({ total: $json.total, by_type: $json.by_type, by_author: $json.by_author }) }}\n\nПредыдущая неделя:\n{{ JSON.stringify($json.previous) }}\n\nИзменение Δ:\n{{ JSON.stringify($json.delta) }}",
+        "batching": {}
+      },
+      "id": "8da87676-0511-4489-a5fe-4b5b0fe6950c",
+      "name": "AI Comment of the Week",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        2160,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "openai/gpt-5.6-sol",
+          "mode": "list",
+          "cachedResultName": "openai/gpt-5.6-sol"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "82eda8ef-fd4d-4304-b9f9-e86b17f39713",
+      "name": "Weekly Report Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        224
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "namiMl0SrQGuVT92",
+          "name": "OpenAI account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const stats = $('Calculate Weekly Delta').first().json;\nconst ai = String($json.output ?? $json.text ?? 'Недостаточно данных для AI-комментария.');\nconst esc = value => String(value).replace(/[&<>\"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[ch]));\nconst sign = n => n > 0 ? `+${n}` : String(n);\nconst labels = { bug: 'Bug', task: 'Task', feature: 'Feature', needs_triage: 'Needs triage' };\nconst typeRows = Object.keys(labels).map(key => `<tr><td>${labels[key]}</td><td>${stats.by_type[key]}</td><td>${stats.previous[key]}</td><td>${sign(stats.delta[key])}</td></tr>`).join('');\nconst authorRows = Object.entries(stats.by_author).sort((a,b) => b[1]-a[1]).map(([author,count]) => `<tr><td>${esc(author)}</td><td>${count}</td></tr>`).join('') || '<tr><td colspan=\"2\">Нет Issues</td></tr>';\nconst html = `<!doctype html><html><body style=\"font-family:Arial,sans-serif;color:#222\"><h2>Еженедельная статистика GitHub Issues</h2><p><b>Репозиторий:</b> ${esc(stats.repo)}<br><b>Период:</b> ${stats.week_start.slice(0,10)} — ${stats.week_end.slice(0,10)}</p><h3>По типам</h3><table cellpadding=\"8\" cellspacing=\"0\" border=\"1\" style=\"border-collapse:collapse\"><tr><th>Тип</th><th>Текущая</th><th>Прошлая</th><th>Δ</th></tr>${typeRows}<tr><th>Всего</th><th>${stats.total}</th><th>${stats.previous.total}</th><th>${sign(stats.delta.total)}</th></tr></table><h3>По авторам</h3><table cellpadding=\"8\" cellspacing=\"0\" border=\"1\" style=\"border-collapse:collapse\"><tr><th>Автор</th><th>Issues</th></tr>${authorRows}</table><h3>AI-комментарий недели</h3><div style=\"padding:12px;background:#f3f4f6;border-left:4px solid #6366f1\">${esc(ai)}</div></body></html>`;\nreturn [{ json: { ...stats, ai_comment: ai, html, subject: `GitHub Issues: недельный отчёт ${stats.week_start.slice(0,10)}` } }];"
+      },
+      "id": "308a2a59-1707-4baa-ab8c-36b63df304e9",
+      "name": "Build HTML Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "yndchrt@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "e2d956dc-4be6-4c1e-9975-8235d78859a6",
+      "name": "Send Weekly Report via Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2640,
+        0
+      ],
+      "webhookId": "e01e66bb-f2d6-46cc-8d04-27ba7e2f7ac1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wTHFkcHIrg7LEHDL",
+          "name": "Gmail account 25"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const s = $('Build HTML Report').first().json;\nreturn [{ json: {\n  week_start: s.week_start, week_end: s.week_end, repo: s.repo, total: s.total,\n  bug: s.by_type.bug, task: s.by_type.task, feature: s.by_type.feature, needs_triage: s.by_type.needs_triage,\n  by_author: JSON.stringify(s.by_author), ai_comment: s.ai_comment, created_at: new Date().toISOString()\n} }];"
+      },
+      "id": "ca82cd75-89a4-4a88-861e-9d449cdbd4c7",
+      "name": "Prepare Current Week Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "issue_weekly_stats",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "week_start": "={{ $json.week_start }}",
+            "week_end": "={{ $json.week_end }}",
+            "repo": "={{ $json.repo }}",
+            "total": "={{ $json.total }}",
+            "bug": "={{ $json.bug }}",
+            "task": "={{ $json.task }}",
+            "feature": "={{ $json.feature }}",
+            "needs_triage": "={{ $json.needs_triage }}",
+            "by_author": "={{ $json.by_author }}",
+            "ai_comment": "={{ $json.ai_comment }}",
+            "created_at": "={{ $json.created_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "week_start",
+              "displayName": "week_start",
+              "type": "date",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "week_end",
+              "displayName": "week_end",
+              "type": "date",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "repo",
+              "displayName": "repo",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "type": "number",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "bug",
+              "displayName": "bug",
+              "type": "number",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "task",
+              "displayName": "task",
+              "type": "number",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "feature",
+              "displayName": "feature",
+              "type": "number",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "needs_triage",
+              "displayName": "needs_triage",
+              "type": "number",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "by_author",
+              "displayName": "by_author",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ai_comment",
+              "displayName": "ai_comment",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "type": "date",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": true,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "ae4e0fc9-2a8f-49c0-9f9c-e6d842f0fd8a",
+      "name": "Save Current Week",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3120,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "26210f06-3962-4f13-9659-5aa4ffbf5d7e",
+      "name": "Setup and Seed Table",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "create",
+        "tableName": "issue_weekly_stats",
+        "columns": {
+          "column": [
+            {
+              "name": "week_start",
+              "type": "date"
+            },
+            {
+              "name": "week_end",
+              "type": "date"
+            },
+            {
+              "name": "repo"
+            },
+            {
+              "name": "total",
+              "type": "number"
+            },
+            {
+              "name": "bug",
+              "type": "number"
+            },
+            {
+              "name": "task",
+              "type": "number"
+            },
+            {
+              "name": "feature",
+              "type": "number"
+            },
+            {
+              "name": "needs_triage",
+              "type": "number"
+            },
+            {
+              "name": "by_author"
+            },
+            {
+              "name": "ai_comment"
+            },
+            {
+              "name": "created_at",
+              "type": "date"
+            }
+          ]
+        },
+        "options": {
+          "createIfNotExists": true
+        }
+      },
+      "id": "ac2bedeb-f832-429c-b019-471eff4e3d92",
+      "name": "Create issue_weekly_stats",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function mondayUTC(date) {\n  const d = new Date(Date.UTC(\n    date.getUTCFullYear(),\n    date.getUTCMonth(),\n    date.getUTCDate()\n  ));\n  const day = d.getUTCDay() || 7;\n  d.setUTCDate(d.getUTCDate() - day + 1);\n  return d;\n}\n\nconst currentMonday = mondayUTC(new Date());\nconst end = new Date(currentMonday);\nconst start = new Date(currentMonday);\nstart.setUTCDate(start.getUTCDate() - 7);\n\nreturn [{\n  json: {\n    week_start: start.toISOString(),\n    week_end: end.toISOString(),\n    repo: 'YanDechart/ITMOv2',\n    total: 6,\n    bug: 2,\n    task: 2,\n    feature: 1,\n    needs_triage: 1,\n    by_author: JSON.stringify({\n      YanDechart: 4,\n      test_user: 2\n    }),\n    ai_comment: 'Тестовая запись предыдущей недели для расчёта Δ.',\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "5bd2cb48-14c0-4ca9-b32e-e767d4d213b7",
+      "name": "Seed Previous Week",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        544
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "issue_weekly_stats",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "week_start": "={{ $json.week_start }}",
+            "week_end": "={{ $json.week_end }}",
+            "repo": "={{ $json.repo }}",
+            "total": "={{ $json.total }}",
+            "bug": "={{ $json.bug }}",
+            "task": "={{ $json.task }}",
+            "feature": "={{ $json.feature }}",
+            "needs_triage": "={{ $json.needs_triage }}",
+            "by_author": "={{ $json.by_author }}",
+            "ai_comment": "={{ $json.ai_comment }}",
+            "created_at": "={{ $json.created_at }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "week_start",
+              "displayName": "week_start",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "week_end",
+              "displayName": "week_end",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "repo",
+              "displayName": "repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "bug",
+              "displayName": "bug",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "task",
+              "displayName": "task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "feature",
+              "displayName": "feature",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "needs_triage",
+              "displayName": "needs_triage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "by_author",
+              "displayName": "by_author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ai_comment",
+              "displayName": "ai_comment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": true,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "f95b1e84-349b-4ec2-afc0-0dd6c3be743e",
+      "name": "Insert Previous Week Seed",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        544
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every Monday 09:00": {
+      "main": [
+        [
+          {
+            "node": "Week Window",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Week Window": {
+      "main": [
+        [
+          {
+            "node": "Weekly Bugs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Bugs": {
+      "main": [
+        [
+          {
+            "node": "Weekly Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Tasks": {
+      "main": [
+        [
+          {
+            "node": "Weekly Features",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Features": {
+      "main": [
+        [
+          {
+            "node": "Weekly Needs Triage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Needs Triage": {
+      "main": [
+        [
+          {
+            "node": "Group by Type and Author",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group by Type and Author": {
+      "main": [
+        [
+          {
+            "node": "Load Previous Week",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Previous Week": {
+      "main": [
+        [
+          {
+            "node": "Calculate Weekly Delta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Weekly Delta": {
+      "main": [
+        [
+          {
+            "node": "AI Comment of the Week",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Comment of the Week": {
+      "main": [
+        [
+          {
+            "node": "Build HTML Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Report Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Comment of the Week",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build HTML Report": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report via Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Weekly Report via Gmail": {
+      "main": [
+        [
+          {
+            "node": "Prepare Current Week Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Current Week Row": {
+      "main": [
+        [
+          {
+            "node": "Save Current Week",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup and Seed Table": {
+      "main": [
+        [
+          {
+            "node": "Create issue_weekly_stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create issue_weekly_stats": {
+      "main": [
+        [
+          {
+            "node": "Seed Previous Week",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seed Previous Week": {
+      "main": [
+        [
+          {
+            "node": "Insert Previous Week Seed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d8296496-2487-4568-9b1b-89971820e304",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "68dbbb4e8fa686c3fd4e9982ade6836edb66976f207553e7ac22df961581c78c"
+  },
+  "nodeGroups": [],
+  "id": "h2J0T0se8KgxzhKx",
+  "tags": []
+}
