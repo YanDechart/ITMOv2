@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
 import react from '@vitejs/plugin-react'
-import { defineConfig, type Plugin } from 'vite'
+import type { Plugin } from 'vite'
+import { defineConfig } from 'vitest/config'
 
 const WEBHOOK_URL =
   'https://n8n-itmo.cyrweb.ru/webhook/bugradar-triage'
@@ -114,4 +115,15 @@ function n8nCurlProxy(): Plugin {
 
 export default defineConfig({
   plugins: [react(), n8nCurlProxy()],
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/test/setup.ts',
+    css: true,
+    env: {
+      VITE_N8N_WEBHOOK_URL:
+        'http://localhost/webhook/bugradar-triage',
+    },
+  },
 })
