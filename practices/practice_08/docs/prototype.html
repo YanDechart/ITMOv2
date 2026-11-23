@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BugRadar — AI prototype</title>
+  <style>
+    :root { --ink:#090909; --paper:#121212; --raised:#191919; --milk:#e9e7dd; --muted:#9c9c96; --blue:#00a8e8; --red:#d1122f; --line:#30302e; }
+    * { box-sizing:border-box } body { margin:0; background:#060606; color:var(--milk); font:15px/1.5 Inter,system-ui,sans-serif }
+    header { max-width:1480px; margin:auto; padding:42px 28px 20px } h1 { margin:0; font-size:clamp(36px,5vw,72px); letter-spacing:-.06em; line-height:.95 }
+    header p { color:var(--muted); max-width:700px } .note { border-left:3px solid var(--blue); padding:10px 16px; background:#0d0d0d }
+    main { max-width:1480px; margin:auto; padding:26px 28px 70px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px }
+    .frame { background:var(--ink); border:1px solid var(--line); border-radius:24px; overflow:hidden; min-height:500px; box-shadow:0 26px 80px #0008 }
+    .bar { height:64px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:0 24px }
+    .brand { font-weight:900 } .repo { border:1px solid var(--line); border-radius:99px; padding:6px 12px; color:var(--muted) }
+    .screen { padding:30px } .eyebrow { color:var(--blue); text-transform:uppercase; font-weight:800; letter-spacing:.12em; font-size:11px }
+    h2 { font-size:32px; letter-spacing:-.04em; margin:6px 0 20px } .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px }
+    .card { border:1px solid var(--line); background:var(--paper); border-radius:18px; padding:20px; min-height:300px }
+    label { display:block; color:var(--muted); font-size:12px; margin:14px 0 6px } .field { border:1px solid #555; background:#0d0d0d; border-radius:11px; padding:12px; min-height:44px }
+    .area { min-height:100px }.button { margin-top:16px; background:var(--blue); color:#061014; font-weight:900; padding:12px 18px; border-radius:11px; text-align:center }
+    .button.disabled { opacity:.52 }.placeholder { height:100%; display:grid; place-content:center; color:var(--muted); text-align:center }.spinner { width:34px; height:34px; border:4px solid #ffffff1f; border-top-color:var(--blue); border-radius:50%; margin:0 auto 16px }
+    .result-type { display:inline-block; color:#fff; background:var(--red); padding:7px 12px; border-radius:99px; font-weight:800 }.meter { height:8px; border-radius:99px; background:#333; overflow:hidden; margin:14px 0 }.meter span { display:block; width:94%; height:100%; background:var(--blue) }
+    .error { border:1px solid var(--red); background:#d1122f18; color:#ff8b9e; padding:14px; border-radius:12px }.mobile { max-width:420px; margin:auto; min-height:650px }.mobile .grid { grid-template-columns:1fr }.mobile .screen { padding:20px }
+    @media(max-width:900px){ main{grid-template-columns:1fr}.grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">AI-generated prototype · версия 2</div>
+    <h1>BugRadar / состояния интерфейса</h1>
+    <p>Структура вдохновлена личным кабинетом my.itmo: спокойная сетка, крупные карточки и фиксированное рабочее пространство. Палитра взята с обложки The New Division.</p>
+    <p class="note">После проверки заменены декоративные элементы на полезную статистику, усилен фокус, добавлены мобильное состояние, повтор запроса и блокировка двойной отправки.</p>
+  </header>
+  <main>
+    <section class="frame"><div class="bar"><span class="brand">BugRadar</span><span class="repo">YanDechart/ITMOv2</span></div><div class="screen"><div class="eyebrow">01 · исходный экран</div><h2>Разбор GitHub Issues</h2><div class="grid"><div class="card"><label>Заголовок</label><div class="field">Авторизация принимает неверный пароль</div><label>Описание</label><div class="field area">Опишите шаги, ожидаемый и фактический результат…</div><div class="button">Проанализировать</div></div><div class="card placeholder">Здесь появится<br/>результат разбора</div></div></div></section>
+    <section class="frame"><div class="bar"><span class="brand">BugRadar</span><span class="repo">YanDechart/ITMOv2</span></div><div class="screen"><div class="eyebrow">02 · загрузка</div><h2>Разбираем контекст</h2><div class="grid"><div class="card"><label>Заголовок</label><div class="field">Авторизация принимает неверный пароль</div><label>Описание</label><div class="field area">Пользователь входит с неверным паролем…</div><div class="button disabled">Анализируем…</div></div><div class="card placeholder"><div><div class="spinner"></div>Проверяем описание и приоритет<br/>Повторная отправка заблокирована</div></div></div></div></section>
+    <section class="frame"><div class="bar"><span class="brand">BugRadar</span><span class="repo">YanDechart/ITMOv2</span></div><div class="screen"><div class="eyebrow">03 · успех</div><h2>Результат разбора</h2><div class="grid"><div class="card"><span class="result-type">Bug</span><h3>Уверенность: 94%</h3><div class="meter"><span></span></div><p>Неверный пароль не блокирует вход в личный кабинет.</p><p class="note">Воспроизвести ошибку, назначить ответственного и добавить регрессионный тест.</p></div><div class="card"><div class="eyebrow">История</div><h3>Авторизация принимает неверный пароль</h3><p style="color:var(--muted)">Только что · Bug · Высокий приоритет</p></div></div></div></section>
+    <section class="frame"><div class="bar"><span class="brand">BugRadar</span><span class="repo">YanDechart/ITMOv2</span></div><div class="screen"><div class="eyebrow" style="color:var(--red)">04 · ошибка</div><h2>Анализ не завершён</h2><div class="grid"><div class="card"><label>Описание</label><div class="field area" style="border-color:var(--red)">Коротко</div><p style="color:#ff7b91">Добавьте подробности — минимум 30 символов</p></div><div class="card"><div class="error">Не удалось связаться с n8n. Проверьте подключение.</div><div class="button" style="background:var(--red);color:white">Повторить попытку</div></div></div></div></section>
+    <section class="frame mobile"><div class="bar"><span class="brand">BugRadar</span><span>☰</span></div><div class="screen"><div class="eyebrow">05 · мобильный экран</div><h2>Новое обращение</h2><div class="grid"><div class="card"><label>Заголовок</label><div class="field">Ошибка авторизации</div><label>Описание</label><div class="field area">Пользователь входит с неправильным паролем…</div><div class="button">Проанализировать</div></div><div class="card placeholder">Результат расположен ниже формы</div></div></div></section>
+  </main>
+</body>
+</html>
+
