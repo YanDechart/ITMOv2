@@ -1,0 +1,2 @@
+issues: https://github.com/YanDechart/ITMOv2/issues
+jsons: in this repo :)
